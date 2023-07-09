@@ -2,7 +2,7 @@ import { createRouter } from 'next-connect';
 import { setLoginSession } from '@/lib/auth';
 import { usernameExists } from '@/lib/helperFunctions';
 import bcrypt from 'bcryptjs';
-import isEmail from "validator/lib/isemail";
+import isEmail from "validator/lib/isEmail";
 import Users from '@/models/User';
 
 const router = createRouter();
