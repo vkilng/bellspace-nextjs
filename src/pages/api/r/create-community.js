@@ -6,6 +6,19 @@ import { communityExists } from '@/lib/helperFunctions';
 import { getLoginSession } from "@/lib/auth";
 import Users from "@/models/User";
 import Communities from '@/models/Community';
+import Images from '@/models/Image';
+import {
+  S3Client,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
+
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: process.env.ACCESS_KEY ?? "",
+    secretAccessKey: process.env.SECRET_ACCESS_KEY ?? "",
+  },
+  region: process.env.REGION_NAME,
+});
 
 const router = createRouter();
 
@@ -52,17 +65,29 @@ router
     if (session) {
       // const getRandomImageName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
       const randomImageName = crypto.randomBytes(16).toString('hex');
-      await sharp(req.file.buffer).resize({ width: 48, height: 48, fit: 'fill' }).toFile(`uploads/${randomImageName}.png`);
+      const modifiedImageBuffer = await sharp(req.file.buffer)
+        .resize({ width: 48, height: 48, fit: "fill" })
+        .toBuffer();
+      // Post command for S3 bucket
+      const postCommand = new PutObjectCommand({
+        Bucket: process.env.BUCKET_NAME,
+        Key: randomImageName,
+        Body: modifiedImageBuffer,
+        ContentType: req.file.mimetype,
+      });
+      const new_image = new Images({ file_name: randomImageName });
+
       const newCommunity = new Communities({
         name: req.body.community_name,
         description: req.body.community_description,
-        profilepic: randomImageName,
+        profilepic: new_image._id,
       });
+
       const currentUser = await Users.findById(session.userID).exec();
       currentUser.communities.push(newCommunity._id);
       newCommunity.moderators.push(currentUser._id);
-      await Promise.all([newCommunity.save(), currentUser.save()]);
-      // res.redirect(`/r/${req.body.community_name}`);
+
+      await Promise.all([newCommunity.save(), s3.send(postCommand), new_image.save(), currentUser.save()]);
       res.status(200).send(newCommunity.name);
     }
     // res.redirect('/');

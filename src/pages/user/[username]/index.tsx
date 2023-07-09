@@ -41,7 +41,9 @@ export default function UserProfile() {
       {posts.length || comments.length ? (
         mergeCollections(posts, comments).map((obj: postObj | commentObj) => {
           if ("title" in obj) {
-            return <PostOverviewCard post={obj} key={uuidv4()} />;
+            return (
+              <PostOverviewCard post={obj} key={uuidv4()} propRef={undefined} />
+            );
           } else {
             return <CommentOverviewCard comment={obj} key={uuidv4()} />;
           }

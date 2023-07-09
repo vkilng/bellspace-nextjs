@@ -1,3 +1,5 @@
 {
-  "explorer.sortOrder": "modified"
+  "explorer.sortOrder": "modified",
+  "workbench.preferredDarkColorTheme": "Default Dark Modern",
+  "workbench.colorTheme": "Tomorrow Night Blue"
 }

@@ -1,16 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 import { useContext, useState } from 'react';
+import { CurrentUserContext } from "@/lib/context";
 import format from 'date-fns/format';
+import { useRouter } from 'next/router';
 
 import Button from '@mui/material/Button'
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import Link from 'next/link';
-import { CurrentUserContext } from '@/components/Context';
-
+import Image from './Image';
 
 export default function CommunityInfoPanel({ community }) {
   const currentUser = useContext(CurrentUserContext);
-  // const router = useRouter();
+  const router = useRouter();
 
   // currentUser membership buttons handler
   const [isMember, setIsMember] = useState(currentUser && currentUser.communities.includes(community._id));
@@ -44,7 +45,7 @@ export default function CommunityInfoPanel({ community }) {
   }
 
   return (
-    <div className="grid auto-rows-min h-min mb-10 rounded-xl bg-stone-100">
+    <div className="grid auto-rows-min h-min mb-10 rounded-xl bg-stone-100 dark:bg-stone-900 dark:text-white">
       <div className="bg-gradient-to-r from-teal-400 to-teal-800 rounded-t-xl p-4 flex justify-between items-center">
         <div className="text-sm font-bold text-white">About Community</div>
         {currentUser && community?.moderators.includes(currentUser._id) &&
@@ -57,7 +58,7 @@ export default function CommunityInfoPanel({ community }) {
       </div>
       <div className='p-4 flex gap-4 justify-between items-center'>
         <div className='flex gap-4 items-center'>
-          <img src={`/uploads/${community.profilepic}`} alt="img" className='w-12 h-12 rounded-full' />
+          <Image image={community.profilepic} classes={'w-12 h-12 rounded-full'} alt='img' />
           <div className='text-xl'>r/{community.name}</div>
         </div>
       </div>
@@ -94,5 +95,5 @@ export default function CommunityInfoPanel({ community }) {
         }
       </div>
     </div>
-  )
+  );
 }

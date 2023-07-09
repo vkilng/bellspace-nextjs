@@ -11,9 +11,10 @@ export default function SearchBar() {
         fullWidth
         placeholder="Search..."
         InputProps={{
-          startAdornment: <MagnifyingGlass size={16} className="mr-1" />,
-          sx: { borderRadius: 99999, '& .MuiInputBase-input': { padding: 0.5 } },
+          startAdornment: <MagnifyingGlass size={12} className="mr-1" />,
+          sx: { borderRadius: 99999, '& .MuiInputBase-input': { padding: 0.7 } },
           disableUnderline: true,
+          style: { fontSize: '0.8rem' }
         }}
       ></TextField>
     </form>

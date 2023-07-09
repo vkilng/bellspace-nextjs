@@ -21,6 +21,7 @@ export default async function handler(
         populate: [
           { path: "author", select: "username" },
           { path: "community", select: "name" },
+          { path: "images" },
         ],
         options: { sort: { created_at: -1 } },
       })

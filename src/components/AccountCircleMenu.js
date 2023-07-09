@@ -1,12 +1,12 @@
 import { useState, useContext } from 'react'
-import { CurrentUserContext } from '@/components/Context';
+import { CurrentUserContext } from '@/lib/context';
 import Link from 'next/link';
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import UserSquare from '@phosphor-icons/react/UserSquare';
+import User from '@phosphor-icons/react/User';
 import CaretDown from '@phosphor-icons/react/CaretDown';
 import UserCircle from '@phosphor-icons/react/UserCircle';
 import Gear from '@phosphor-icons/react/Gear';
@@ -31,13 +31,11 @@ export default function AccountCircleMenu() {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
         disableRipple
-        className="flex gap-2 items-center p-3 rounded-lg w-fit normal-case focus:bg-gray-300"
+        className="flex gap-3 items-center p-3 rounded-lg w-fit normal-case text-sm focus:bg-zinc-100 dark:focus:bg-zinc-800"
       >
-        <UserSquare size={24} />
-        <div className='font-semibold'>
-          {currentUser.username}
-        </div>
-        <CaretDown size={16} weight="bold" />
+        <User size={16} />
+        {currentUser.username}
+        <CaretDown size={12} weight="bold" />
       </Button>
       <Menu id="theme-control" anchorEl={anchorEl} open={open} onClose={handleClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}

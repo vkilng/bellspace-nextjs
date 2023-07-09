@@ -10,11 +10,15 @@ export default async function handler(
   try {
     const community = await Communities.findOne({
       name: req.query.community,
-    }).exec();
+    })
+      .populate("profilepic")
+      .exec();
     if (community) {
       const posts = await Posts.find({ community: community._id })
-        .populate('author', 'username')
-        .populate('community','name')
+        .populate("author", "username")
+        .populate("community", "name")
+        .populate("images")
+        .sort({ created_at: -1 })
         .exec();
       res.status(200).json({ community, posts });
     } else res.status(400).send("Community not found");

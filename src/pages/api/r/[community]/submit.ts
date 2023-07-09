@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getLoginSession } from "@/lib/auth";
 import Users from "@/models/User";
 import Posts from "@/models/Post";
+import Images from "@/models/Image";
 import mongoose from "mongoose";
 import multer from "multer";
 import sharp from "sharp";
@@ -54,6 +55,7 @@ export default async function handler(req: any, res: NextApiResponse) {
         res.status(400).send("User not a member of this community");
 
       const new_post = new Posts({
+        created_at:Date.now(),
         title: req.body.post_title,
         body: req.body.post_content,
         author: currentUser._id,
@@ -75,20 +77,10 @@ export default async function handler(req: any, res: NextApiResponse) {
             Body: modifiedImageBuffer,
             ContentType: file.mimetype,
           });
-          await s3.send(postCommand);
-          // Get image url from S3 bucket
-          const getCommand = new GetObjectCommand({
-            Bucket: process.env.BUCKET_NAME,
-            Key: randomImageName,
-          });
-          const imageUrl = await getSignedUrl(s3, getCommand, {
-            expiresIn: 3600,
-          });
-          imagesList.push({
-            image_name: randomImageName,
-            url: imageUrl,
-            last_updated: Date.now(),
-          });
+          // Push image info to mongoDB
+          const new_image = new Images({ file_name: randomImageName });
+          await Promise.all([s3.send(postCommand), new_image.save()]);
+          imagesList.push(new_image._id);
         }
         new_post.images = imagesList;
       }

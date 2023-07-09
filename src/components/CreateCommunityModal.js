@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { useSWRConfig } from "swr";
 
 import { MuiFileInput } from "mui-file-input";
 import Button from "@mui/material/Button";
@@ -17,6 +18,7 @@ import UploadSimple from "@phosphor-icons/react/UploadSimple";
 
 export default function CreateCommunityModal({ modalOpen = true, handleClose }) {
   const router = useRouter();
+  const { mutate } = useSWRConfig();
 
   // Community Input Value handlers
   const [communityNameIsValid, setCommunityNameIsValid] = useState(true);
@@ -79,6 +81,7 @@ export default function CreateCommunityModal({ modalOpen = true, handleClose }) 
       if (res.status === 200) {
         const communityName = await res.text();
         handleClose();
+        mutate('/api/r/get-list');
         router.push(`/r/${communityName}`);
       } else {
         const errorMsg = await res.text();
@@ -108,7 +111,7 @@ export default function CreateCommunityModal({ modalOpen = true, handleClose }) 
       aria-describedby="modal-modal-description"
       className="grid items-center justify-center"
     >
-      <div className="p-2 grid rounded-lg bg-white focus:outline-none overflow-y-auto max-h-full">
+      <div className="p-2 grid rounded-lg bg-white dark:bg-zinc-950 dark:text-white focus:outline-none overflow-y-auto max-h-full">
         <IconButton onClick={handleClose} size="small" className="justify-self-end">
           <CloseOutlinedIcon />
         </IconButton>

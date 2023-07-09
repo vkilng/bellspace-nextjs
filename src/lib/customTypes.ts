@@ -43,3 +43,10 @@ export interface pageBannerObj {
   url?: string;
   text: string;
 }
+
+export interface imageObj {
+  file_name:string,
+  url:string,
+  updated_at: Date,
+  expires_at: Date
+}

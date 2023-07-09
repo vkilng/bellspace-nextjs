@@ -29,15 +29,8 @@ import Trash from "@phosphor-icons/react/dist/icons/Trash";
 import Carousel from 'react-material-ui-carousel'
 import { v4 as uuidv4 } from "uuid";
 import IconButton from '@mui/material/IconButton'
+import { useThemeStore } from "@/lib/store";
 
-
-const MenuButton = styled(ToggleButton)({
-  border: 0,
-  backgroundColor: '#fafaf9',
-  '&.Mui-selected': {
-    backgroundColor: '#a8a29e',
-  }
-})
 
 export default function TiptapEditor({ options: {
   type,
@@ -46,6 +39,20 @@ export default function TiptapEditor({ options: {
     handleSetImageFiles
   ],
 } }) {
+  const mode = useThemeStore((state) => state.theme);
+  const MenuButton = styled(ToggleButton)(mode === 'light'
+    ? {
+      border: 0,
+      backgroundColor: '#fafaf9',
+      '&.Mui-selected': { backgroundColor: '#a8a29e', }
+    }
+    : {
+      border: 0,
+      backgroundColor: '#3f3f46',
+      '&:hover': { backgroundColor: '#27272a' },
+      '&.Mui-selected': { backgroundColor: '#09090b', }
+    })
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -74,7 +81,6 @@ export default function TiptapEditor({ options: {
   const addImages = (e) => {
     const newFiles = Array.from(files);
     Array.from(e.target.files).map(newFile => newFiles.push(newFile))
-    console.log(newFiles);
     setFiles(newFiles);
   }
 
@@ -132,8 +138,8 @@ export default function TiptapEditor({ options: {
   }, [editor])
 
   if (editor) return (
-    <div className="border-2 border-solid border-stone-200 rounded-md w-full focus-within:border-1 focus-within:border-stone-400 bg-white">
-      <div className="p-2 flex gap-5 bg-stone-100 rounded-t-sm">
+    <div className="border-2 border-solid border-stone-300 rounded-md w-full focus-within:border-1 focus-within:border-stone-400 bg-white dark:bg-zinc-950 dark:text-white dark:border-zinc-800">
+      <div className="p-2 flex gap-5 bg-stone-100 rounded-t-sm dark:bg-zinc-800 dark:text-white">
         <div className="flex gap-1">
           <MenuButton size="small" selected={editor.isActive('bold')}
             onClick={() => editor.chain().focus().toggleBold().run()} value="check"

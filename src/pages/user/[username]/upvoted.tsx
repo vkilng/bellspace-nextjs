@@ -37,7 +37,7 @@ export default function UserUpvoted() {
     >
       {posts.length ? (
         posts.map((post: postObj) => (
-          <PostOverviewCard post={post} key={post._id} />
+          <PostOverviewCard post={post} key={post._id} propRef={undefined} />
         ))
       ) : (
         <div className="h-full flex items-center justify-center">

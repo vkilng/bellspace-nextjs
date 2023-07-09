@@ -1,10 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { CurrentUserContext } from "@/components/Context";
+import { CurrentUserContext } from "@/lib/context";
 import TiptapEditor from "@/components/TiptapEditor";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import UserInfoPanel from "@/components/UserInfoPanel";
+import { useBannerStore } from "@/lib/store";
 
 export default function CreatePost() {
   const currentUser = useContext(CurrentUserContext);
@@ -12,8 +13,15 @@ export default function CreatePost() {
   if (currentUser && router.query.username !== currentUser?.username)
     router.push("/");
 
+  const setBannerContent = useBannerStore(state=>state.setBannerContent);
+  useEffect(() => {
+    setBannerContent({ icon: "plus", text: "Create Post" });
+  }, []);
+
   // Editor content handlers
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(
+    '{"type":"doc","content":[{"type":"paragraph"}]}'
+  );
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const handleSetContent = (body: string) => setContent(body);
   const handleSetImageFiles = (files: Array<File>) => setImageFiles(files);
@@ -62,7 +70,7 @@ export default function CreatePost() {
               <TiptapEditor
                 options={{
                   type: "post",
-                  functions: [handleSetContent, handleSetImageFiles]
+                  functions: [handleSetContent, handleSetImageFiles],
                 }}
               />
               <Button

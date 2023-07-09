@@ -18,6 +18,7 @@ export default async function handler(
       const posts = await Posts.find({ author: requestedUser._id })
         .populate("author", "username")
         .populate("community", "name")
+        .populate("images")
         .sort({ created_at: -1 })
         .exec();
       res.status(200).json({ requestedUser, posts });

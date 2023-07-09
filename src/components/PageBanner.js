@@ -1,25 +1,31 @@
 /* eslint-disable @next/next/no-img-element */
-import { useContext } from "react";
-import { PageBannerContext } from "./Context";
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import Plus from '@phosphor-icons/react/Plus';
 
+import HomeIcon from '@mui/icons-material/Home';
+import { Plus } from "@phosphor-icons/react";
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import IconButton from '@mui/material/IconButton'
+import { useBannerStore } from "@/lib/store";
+import Image from './Image';
 
 export default function PageBanner() {
-  const { bannerContent } = useContext(PageBannerContext);
+  const { bannerContent, sidebarHidden, toggleSidebar } = useBannerStore();
 
-  function getIcon(icon = bannerContent.icon) {
+  function getIcon(icon = bannerContent?.icon) {
     switch (icon) {
       case 'home':
-        return <HomeOutlinedIcon fontSize='small' />
+        return <HomeIcon fontSize='small' />
         break;
 
-      case 'add':
+      case 'plus':
         return <Plus size={20} />
         break;
 
+      case 'user':
+        return <img src='/images/blank-profile-pic.png' alt='pp' width={20} height={20} className="rounded-full" />;
+        break;
+
       case 'image':
-        return <img src={bannerContent.url} alt='img' width={12} height={12} className='rounded-full' />
+        return <Image image={bannerContent.image} alt="img" classes="w-6 h-6 rounded-full" />
 
       default:
         break;
@@ -27,9 +33,16 @@ export default function PageBanner() {
   }
 
   return (
-    <div className='flex items-center justify-center py-2 px-4'>
-      {getIcon()}
-      {bannerContent.text}
+    <div className='flex gap-3 items-center justify-center py-1 px-4 font-sans text-sm dark:text-white'>
+      {sidebarHidden &&
+        <IconButton aria-label="toggle-sidebar" onClick={toggleSidebar}>
+          <MenuOpenIcon />
+        </IconButton>
+      }
+      <div className='flex gap-3 items-center justify-center'>
+        {getIcon()}
+        {bannerContent?.text}
+      </div>
     </div>
   )
 }

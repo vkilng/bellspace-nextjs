@@ -1,14 +1,11 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import type { NextComponentType } from "next";
-import Layout from "../components/Layout";
+import Layout from "@/components/Layout";
 import { useUser } from "@/lib/hooks";
-import { CurrentUserContext } from "@/components/Context";
+import { CurrentUserContext } from "@/lib/context";
 import NextNProgress from "nextjs-progressbar";
 import CircularProgress from "@mui/material/CircularProgress";
-import ScrollToTop from "react-scroll-to-top";
-import { useState } from "react";
-import { pageBannerObj } from "@/lib/customTypes";
 
 type customAppProps = AppProps & {
   Component: NextComponentType & { ditchLayout?: boolean };
@@ -16,10 +13,6 @@ type customAppProps = AppProps & {
 
 export default function App({ Component, pageProps }: customAppProps) {
   var { user: currentUser, isLoading } = useUser();
-  const [bannerContent, setBannerContent] = useState({
-    icon: "home",
-    text: "Home",
-  });
 
   return Component.ditchLayout ? (
     <>
@@ -36,13 +29,7 @@ export default function App({ Component, pageProps }: customAppProps) {
         ) : (
           <>
             <NextNProgress options={{ showSpinner: false }} />
-            <Component
-              {...pageProps}
-              setBannerContent={(content: pageBannerObj) =>
-                setBannerContent(content)
-              }
-            />
-            <ScrollToTop smooth />
+            <Component {...pageProps} key="nochange" />
           </>
         )}
       </Layout>

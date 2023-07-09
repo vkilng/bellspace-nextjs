@@ -19,6 +19,7 @@ export default async function handler(
         const post = await Posts.findById(req.query.postID)
           .populate("author", "username")
           .populate("community", "name")
+          .populate("images")
           .exec();
         const comments = await Comments.find({ post: post._id })
           .populate("author", "username profile_pic_url")

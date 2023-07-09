@@ -84,7 +84,7 @@ export default function LoginModal({ LogInOpen = true, handleClose }) {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <div className="grid auto-rows-min m-auto w-1/3 h-full p-12 bg-white focus:outline-none overflow-y-auto">
+      <div className="grid auto-rows-min m-auto w-1/3 h-full p-12 bg-white dark:bg-zinc-950 dark:text-white focus:outline-none overflow-y-auto">
         <IconButton onClick={handleClose} className="justify-self-end">
           <ArrowBackIcon />
         </IconButton>
@@ -96,10 +96,10 @@ export default function LoginModal({ LogInOpen = true, handleClose }) {
         </Typography>
         <div className="mt-10">
           <Button href="/api/login/auth/google" variant="outlined" size="large" color="secondary" fullWidth
-            className="normal-case rounded-full bg-white border-gray-300 hover:bg-[rgb(238,238,238)] hover:border-gray-300 focus:outline-none"
+            className="normal-case rounded-full bg-white border-gray-300 hover:bg-[rgb(238,238,238)] hover:border-gray-300 focus:outline-none dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-900"
             startIcon={<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/32px-Google_%22G%22_Logo.svg.png" alt="Google &quot;G&quot; Logo" width={20} height={20} />}
           >
-            <div className="p-1 w-full flex justify-center text-base font-semibold text-stone-500">Continue with Google</div>
+            <div className="p-1 w-full flex justify-center text-base font-semibold text-stone-500 dark:text-stone-400">Continue with Google</div>
           </Button>
         </div>
 

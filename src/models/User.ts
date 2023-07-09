@@ -14,5 +14,4 @@ const UserSchema = new Schema({
   saved: [{ type: Schema.Types.ObjectId, ref: "Posts", default: null }],
 });
 
-const Users = models?.Users || model("Users", UserSchema);
-export default Users;
+export default models?.Users || model("Users", UserSchema);

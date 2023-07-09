@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import fetcher from "@/lib/helperFunctions/fetcher";
@@ -6,15 +6,23 @@ import TiptapEditor from "@/components/TiptapEditor";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import CommunityInfoPanel from "@/components/CommunityInfoPanel";
-import { CurrentUserContext } from "@/components/Context";
+import { CurrentUserContext } from "@/lib/context";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useBannerStore } from "@/lib/store";
 
 export default function CreatePost() {
   const currentUser = useContext(CurrentUserContext);
   const router = useRouter();
 
+  const setBannerContent = useBannerStore((state) => state.setBannerContent);
+  useEffect(() => {
+    setBannerContent({ icon: "plus", text: "Create Post" });
+  }, []);
+
   // Editor content handlers
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(
+    '{"type":"doc","content":[{"type":"paragraph"}]}'
+  );
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const handleSetContent = (body: string) => setContent(body);
   const handleSetImageFiles = (files: Array<File>) => setImageFiles(files);

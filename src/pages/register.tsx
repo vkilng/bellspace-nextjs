@@ -12,21 +12,8 @@ import Divider from "@mui/material/Divider";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Link from "next/link";
 
-declare module "@mui/material/styles/createPalette" {
-  export interface PaletteOptions {
-    neutral: {
-      main: string;
-    };
-  }
-}
-
-// import type {  overrida} from "@mui/material";
-
 const myTheme = createTheme({
   palette: {
-    neutral: {
-      main: "#57534e",
-    },
     primary: {
       main: "#2dd4bf",
       contrastText: "#fff",

@@ -14,7 +14,7 @@ import Dot from "@phosphor-icons/react/Dot";
 import BookmarkSimple from "@phosphor-icons/react/BookmarkSimple";
 import ShareNetwork from '@phosphor-icons/react/ShareNetwork';
 import ClockCounterClockwise from '@phosphor-icons/react/ClockCounterClockwise';
-import { CurrentUserContext } from "@/components/Context";
+import { CurrentUserContext } from "@/lib/context";
 import { useRouter } from "next/router";
 
 
@@ -62,7 +62,7 @@ export default function CommentOverviewCard({ comment }) {
   }
 
   return (
-    <div className="grid gap-2 p-2 bg-stone-200 max-w-2xl">
+    <div className="grid gap-2 p-2 bg-stone-200 max-w-2xl dark:bg-stone-900 dark:text-white">
       <div className="flex gap-2 items-center">
         <ChatCenteredText size={24} color='#78716c' />
         <div className="flex gap-x-2 items-center flex-wrap mr-2">
@@ -77,7 +77,7 @@ export default function CommentOverviewCard({ comment }) {
             <div className="shrink-0 flex items-center">
               <Dot size={16} />
               <Link href={`/r/${comment.post.community.name}`} onClick={(e) => e.stopPropagation()}
-                className="text-xs text-stone-800 font-bold no-underline hover:underline shrink-0">
+                className="text-xs text-stone-800 font-bold no-underline hover:underline shrink-0 dark:text-stone-500">
                 r/{comment.post.community.name}
               </Link>
               <Dot size={16} />

@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState, forwardRef } from "react"
 import Link from "next/link";
 import formatDistance from "date-fns/formatDistance";
 
@@ -11,12 +11,13 @@ import ChatCenteredText from "@phosphor-icons/react/ChatCenteredText";
 import BookmarkSimple from "@phosphor-icons/react/BookmarkSimple";
 import ShareNetwork from '@phosphor-icons/react/ShareNetwork';
 import ClockCounterClockwise from '@phosphor-icons/react/ClockCounterClockwise';
-import { CurrentUserContext } from "@/components/Context";
+import { CurrentUserContext } from "@/lib/context";
 import { useRouter } from "next/router";
 import Carousel from "react-material-ui-carousel";
 import { v4 as uuidv4 } from "uuid";
+import Image from "./Image";
 
-export default function PostOverviewCard({ post }) {
+const PostOverviewCard = ({ post, propRef }) => {
   const router = useRouter();
   const currentUser = useContext(CurrentUserContext);
 
@@ -122,10 +123,10 @@ export default function PostOverviewCard({ post }) {
   }
 
   return (
-    <Card onClick={openPost} variant="outlined"
-      className="max-w-2xl cursor-pointer hover:outline hover:outline-1 hover:outline-stone-300 shadow-sm"
+    <Card onClick={openPost} variant="outlined" ref={propRef}
+      className="max-w-2xl cursor-pointer shadow-sm hover:outline hover:outline-1 hover:outline-stone-500 border-none"
     >
-      <div className="flex p-4 bg-stone-50 gap-4 max-w-2xl">
+      <div className="flex p-4 gap-4 max-w-2xl">
         <div className="grid items-center justify-items-center h-min">
           <IconButton className="vote-btn"
             onClick={currentUser ? handleUpvote : (e) => e.stopPropagation()}
@@ -147,16 +148,16 @@ export default function PostOverviewCard({ post }) {
         </div>
         <div className="grid auto-rows-min gap-3 content-between flex-grow">
           <div className="grid gap-3 auto-rows-min">
-            <div className="flex gap-1 text-sm items-center">
+            <div className="flex gap-1 text-sm items-center flex-wrap">
               {post.community &&
                 <Link href={`/r/${post.community.name}`} onClick={(e) => e.stopPropagation()}
-                  className="text-black text-base font-bold me-2 no-underline hover:underline">
+                  className="text-black text-base font-bold me-2 no-underline hover:underline dark:text-white">
                   r/{post.community.name}
                 </Link>
               }
               Posted by
               <Link href={`/user/${post.author.username}`} onClick={(e) => e.stopPropagation()}
-                className="text-black no-underline hover:underline"
+                className="text-black no-underline hover:underline dark:text-white"
               >
                 u/{post.author.username}
               </Link>
@@ -169,8 +170,8 @@ export default function PostOverviewCard({ post }) {
             {post.images && post.images.length > 0 &&
               <Carousel autoPlay={false} indicators={false} fullHeightHover={false} className="w-full">
                 {post.images.map(imageObj =>
-                  <div key={uuidv4()} className="flex items-center justify-center bg-stone-900 min-w-fit max-w-full">
-                    <img src={imageObj.url ?? '#'} alt='an error occurred showing image' height={320} />
+                  <div key={imageObj._id} className="flex items-center justify-center bg-stone-900 min-w-fit max-w-full">
+                    <Image image={imageObj} classes={'h-80'} alt={"an error occurred showing image"} />
                   </div>
                 )}
               </Carousel>
@@ -182,11 +183,11 @@ export default function PostOverviewCard({ post }) {
               <div>{post.commentCount}</div>
               Comments
             </div>
-            <Button startIcon={<ShareNetwork size={24} />} onClick={(e) => e.stopPropagation()} className="normal-case" color="info">
+            <Button startIcon={<ShareNetwork size={24} />} onClick={(e) => e.stopPropagation()} className="normal-case dark:text-zinc-400" color="info">
               Share
             </Button>
             {currentUser &&
-              <Button variant="text" className="normal-case" color="info" onClick={handleSave}
+              <Button variant="text" className="normal-case dark:text-zinc-400" color="info" onClick={handleSave}
                 startIcon={<BookmarkSimple size={24} weight={saved ? 'fill' : 'regular'} color='#44403c' />}
                 disabled={!currentUser}
               >
@@ -208,3 +209,5 @@ const formatNumber = (num) => {
   else
     return `${num}`
 }
+
+export default PostOverviewCard;

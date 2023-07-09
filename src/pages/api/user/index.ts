@@ -1,3 +1,4 @@
+import Images from "@/models/Image";
 import { getLoginSession } from "@/lib/auth";
 import Users from "@/models/User";
 import type { NextApiRequest, NextApiResponse } from "next";

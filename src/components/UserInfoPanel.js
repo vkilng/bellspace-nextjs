@@ -5,13 +5,13 @@ import Link from "next/link";
 import PlusCircle from "@phosphor-icons/react/PlusCircle";
 import Button from '@mui/material/Button'
 import { useContext } from "react";
-import { CurrentUserContext } from "@/components/Context";
+import { CurrentUserContext } from "@/lib/context";
 
 export default function UserInfoPanel({ requestedUser }) {
   const currentUser = useContext(CurrentUserContext);
 
   return (
-    <div className="grid auto-rows-min bg-stone-100 rounded-xl h-min">
+    <div className="grid auto-rows-min bg-stone-100 rounded-xl h-min dark:bg-stone-900 dark:text-white">
       <div className="h-32 bg-gradient-to-r from-teal-400 to-teal-800 rounded-t-xl"></div>
       <div className="top-0 mx-5 -mt-24 grid gap-2">
         <div className="p-1 bg-stone-100 rounded-lg w-fit relative">

@@ -13,10 +13,11 @@ import ChatCenteredText from "@phosphor-icons/react/ChatCenteredText";
 import BookmarkSimple from "@phosphor-icons/react/BookmarkSimple";
 import ShareNetwork from '@phosphor-icons/react/ShareNetwork';
 import ClockCounterClockwise from '@phosphor-icons/react/ClockCounterClockwise';
-import { CurrentUserContext } from "@/components/Context";
+import { CurrentUserContext } from "@/lib/context";
 import { useRouter } from "next/router";
 import Carousel from "react-material-ui-carousel";
 import { v4 as uuidv4 } from "uuid";
+import Image from "./Image";
 
 export default function PostDetailedCard({ post }) {
   const router = useRouter();
@@ -123,63 +124,65 @@ export default function PostDetailedCard({ post }) {
   }, [currentVote])
 
   if (postContent) return (
-    <div>
-      <div className="flex p-4 bg-stone-50 gap-4">
-        <div className="grid items-center justify-items-center h-min">
-          <IconButton className="vote-btn" onClick={currentUser && handleUpvote}>
-            <ArrowFatUp size={28}
-              weight={(currentVote === null) ? 'regular' : 'fill'}
-              color={(currentVote === true) ? '#f59e0b' : '#a8a29e'}
-            />
-          </IconButton>
-          <div className="text-lg">{formatNumber(upvoteCount)}</div>
-          <IconButton className="vote-btn rotate-180" onClick={currentUser && handleDownVote}>
-            <ArrowFatUp size={28}
-              weight={(currentVote === null) ? 'regular' : 'fill'}
-              color={(currentVote === false) ? '#3b82f6' : '#a8a29e'}
-            />
-          </IconButton>
-        </div>
-        <div className="grid auto-rows-min gap-3 content-between flex-grow">
-          <div className="grid gap-3 auto-rows-min">
-            <div className="flex gap-1 text-sm items-center">
-              {post.community && <div className="font-bold text-base me-2">r/{post.community.name}</div>}
-              Posted by
-              <Link href={`/user/${post.author.username}`} className="text-black no-underline hover:underline hover:cursor-pointer">
-                u/{post.author.username}
+    <div className="flex py-4 gap-4 dark:bg-zinc-950 dark:text-white">
+      <div className="grid items-center justify-items-center h-min">
+        <IconButton className="vote-btn" onClick={currentUser && handleUpvote}>
+          <ArrowFatUp size={28}
+            weight={(currentVote === null) ? 'regular' : 'fill'}
+            color={(currentVote === true) ? '#f59e0b' : '#a8a29e'}
+          />
+        </IconButton>
+        <div className="text-lg">{formatNumber(upvoteCount)}</div>
+        <IconButton className="vote-btn rotate-180" onClick={currentUser && handleDownVote}>
+          <ArrowFatUp size={28}
+            weight={(currentVote === null) ? 'regular' : 'fill'}
+            color={(currentVote === false) ? '#3b82f6' : '#a8a29e'}
+          />
+        </IconButton>
+      </div>
+      <div className="grid auto-rows-min gap-3 content-between flex-grow">
+        <div className="grid gap-3 auto-rows-min">
+          <div className="flex gap-1 text-sm items-center flex-wrap">
+            {post.community &&
+              <Link href={`/r/${post.community.name}`} onClick={(e) => e.stopPropagation()}
+                className="text-black text-base font-bold me-2 no-underline hover:underline dark:text-white">
+                r/{post.community.name}
               </Link>
-              <ClockCounterClockwise size={16} className='ms-2' />
-              <div>{formatDistance(new Date(post.created_at), new Date())} ago</div>
-            </div>
-            <div className="font-bold text-xl">{post.title}</div>
-            {!postContent.isEmpty && <EditorContent editor={postContent} />}
-            {post.images && post.images.length > 0 &&
-              <Carousel autoPlay={false} fullHeightHover={false} className="w-full">
-                {post.images.map(imageObj =>
-                  <div key={uuidv4()} className="flex items-center justify-center bg-stone-900 min-w-fit max-w-full">
-                    <img src={imageObj.url ?? '#'} alt='an error occurred showing image' height={320} />
-                  </div>
-                )}
-              </Carousel>
             }
-            {post.imgurl && <img src="post.imgurl" alt="image not found" className="rounded-2xl" />}
+            Posted by
+            <Link href={`/user/${post.author.username}`} className="text-black no-underline hover:underline hover:cursor-pointer dark:text-white">
+              u/{post.author.username}
+            </Link>
+            <ClockCounterClockwise size={16} className='ms-2' />
+            <div>{formatDistance(new Date(post.created_at), new Date())} ago</div>
           </div>
-          <div className="flex gap-6 items-center">
-            <div className="flex gap-1 items-center">
-              <ChatCenteredText size={24} />
-              <div>{post.commentCount}</div>
-              Comments
-            </div>
-            <Button startIcon={<ShareNetwork size={24} />} className="normal-case" color="info">
-              Share
-            </Button>
-            <Button variant="text" className="normal-case" color="info" onClick={handleSave}
-              startIcon={<BookmarkSimple size={24} weight={saved ? 'fill' : 'regular'} color='#44403c' />}
-              disabled={!currentUser}
-            >
-              {saved ? 'Saved' : 'Save'}
-            </Button>
+          <div className="font-bold text-xl">{post.title}</div>
+          {!postContent.isEmpty && <EditorContent editor={postContent} />}
+          {post.images && post.images.length > 0 &&
+            <Carousel autoPlay={false} fullHeightHover={false} className="w-full">
+              {post.images.map(imageObj =>
+                <div key={imageObj._id} className="flex items-center justify-center bg-stone-900 min-w-fit max-w-full">
+                  <Image image={imageObj} classes={'h-80'} alt={"an error occurred showing image"} />
+                </div>
+              )}
+            </Carousel>
+          }
+        </div>
+        <div className="flex gap-6 items-center">
+          <div className="flex gap-1 items-center">
+            <ChatCenteredText size={24} />
+            <div>{post.commentCount}</div>
+            Comments
           </div>
+          <Button startIcon={<ShareNetwork size={24} />} className="normal-case dark:text-zinc-400" color="info">
+            Share
+          </Button>
+          <Button variant="text" className="normal-case dark:text-zinc-400" color="info" onClick={handleSave}
+            startIcon={<BookmarkSimple size={24} weight={saved ? 'fill' : 'regular'} color='#44403c' />}
+            disabled={!currentUser}
+          >
+            {saved ? 'Saved' : 'Save'}
+          </Button>
         </div>
       </div>
     </div>

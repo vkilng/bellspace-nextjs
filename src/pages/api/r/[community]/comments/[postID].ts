@@ -15,11 +15,14 @@ export default async function handler(
     if (req.method === "GET") {
       const community = await Communities.findOne({
         name: req.query.community,
-      }).exec();
+      })
+        .populate("profilepic")
+        .exec();
       if (community) {
         const post = await Posts.findById(req.query.postID)
           .populate("author", "username")
           .populate("community", "name")
+          .populate("images")
           .exec();
         const comments = await Comments.find({ post: post._id })
           .populate("author", "username profile_pic_url")

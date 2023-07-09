@@ -18,5 +18,5 @@ module.exports = {
   corePlugins: {
     preflight: false,
   },
-  // important: '#_next',
+  darkMode: 'class',
 }
