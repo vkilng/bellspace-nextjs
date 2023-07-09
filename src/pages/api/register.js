@@ -1,4 +1,4 @@
-import { createRouter, expressWrapper } from 'next-connect';
+import { createRouter } from 'next-connect';
 import { setLoginSession } from '@/lib/auth';
 import { usernameExists } from '@/lib/helperFunctions';
 import bcrypt from 'bcryptjs';
