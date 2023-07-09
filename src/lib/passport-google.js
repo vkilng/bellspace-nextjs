@@ -9,7 +9,7 @@ export const googleStrategy = new GoogleStrategy(
   {
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/api/login/auth/redirect",
+    callbackURL: "https://bellspace.vercel.app/api/login/auth/redirect",
     passReqToCallback: true,
   },
   async function verify(
