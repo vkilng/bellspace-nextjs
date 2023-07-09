@@ -1,7 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
-import { createTheme, ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
+import {
+  createTheme,
+  ThemeProvider,
+  StyledEngineProvider,
+} from "@mui/material/styles";
 import { useState } from "react";
-import isEmail from "validator/lib/isemail";
+import isEmail from "validator/lib/isEmail";
 import RegisterModal from "@/components/RegisterModal";
 
 import Head from "next/head";
@@ -89,8 +93,8 @@ export default function Register() {
                 </IconButton>
                 <div className="text-lg font-medium mb-3">Sign Up</div>
                 <div className="text-sm lg:mb-10">
-                  By continuing, you are setting up a Bellspace account and agree
-                  to our User Agreement and Privacy Policy.
+                  By continuing, you are setting up a Bellspace account and
+                  agree to our User Agreement and Privacy Policy.
                 </div>
                 <div className="mt-10">
                   <Button
