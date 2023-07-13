@@ -15,7 +15,7 @@ export default function CommunityInfoPanel({ community }) {
 
   // currentUser membership buttons handler
   const [isMember, setIsMember] = useState(currentUser && currentUser.communities.includes(community._id));
-  const [buttonVariant, setButtonVariant] = useState(undefined);
+  const [buttonVariant, setButtonVariant] = useState(false);
   const handleMouseOver = (e) => {
     if (isMember) setButtonVariant(true);
   }
@@ -37,6 +37,7 @@ export default function CommunityInfoPanel({ community }) {
         if (res.status === 200) {
           setIsMember(true);
           community.memberCount += 1;
+          setButtonVariant(false);
         }
       }
     } catch (error) {
@@ -45,8 +46,8 @@ export default function CommunityInfoPanel({ community }) {
   }
 
   return (
-    <div className="grid auto-rows-min h-min mb-10 rounded-xl bg-stone-100 dark:bg-stone-900 dark:text-white">
-      <div className="bg-gradient-to-r from-teal-400 to-teal-800 rounded-t-xl p-4 flex justify-between items-center">
+    <div className="grid auto-rows-min h-min lg:mb-10 text-xs lg:text-base lg:rounded-xl bg-stone-100 dark:bg-zinc-950 dark:lg:bg-stone-900 dark:text-white">
+      <div className="bg-gradient-to-r from-teal-400 to-teal-800 rounded-t-xl p-4 hidden lg:flex justify-between items-center">
         <div className="text-sm font-bold text-white">About Community</div>
         {currentUser && community?.moderators.includes(currentUser._id) &&
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -56,43 +57,48 @@ export default function CommunityInfoPanel({ community }) {
 
         }
       </div>
-      <div className='p-4 flex gap-4 justify-between items-center'>
+      <div className='px-4 py-2 lg:p-4 flex gap-4 justify-between items-center'>
         <div className='flex gap-4 items-center'>
-          <Image image={community.profilepic} classes={'w-12 h-12 rounded-full'} alt='img' />
-          <div className='text-xl'>r/{community.name}</div>
+          <Image image={community.profilepic} classes={'w-8 h-8 lg:w-12 lg:h-12 rounded-full'} alt='img' />
+          <div className='text-base font-semibold lg:text-xl'>r/{community.name}</div>
         </div>
       </div>
-      <div className='grid gap-4 px-4 mb-5'>
-        <div>{community.description}</div>
-        <div className='flex gap-2 items-center'>
-          <EventOutlinedIcon />
-          Created
-          <div>{format(new Date(community.created_at), 'MMM d, yyyy')}</div>
+      <div className='flex flex-row-reverse justify-between lg:grid gap-4 px-4 lg:mb-5'>
+        <div className='hidden lg:block'>{community.description}</div>
+        <div className='grid'>
+          <div className='flex gap-2 items-center'>
+            <div className='lg:hidden'><EventOutlinedIcon fontSize='small' /></div>
+            <div className='hidden lg:block'><EventOutlinedIcon /></div>
+            Created
+            <div>{format(new Date(community.created_at), 'MMM d, yyyy')}</div>
+          </div>
+          <div className='flex gap-2 items-center ms-1'>
+            <span className='text-sm lg:text-lg'>{community.memberCount}</span>
+            <span>{community.memberCount > 1 ? "members" : "member"}</span>
+          </div>
         </div>
-        <div className='flex gap-2 items-center ms-1'>
-          <span className='text-lg'>{community.memberCount}</span>
-          <span>{community.memberCount > 1 ? "members" : "member"}</span>
+        <div className='flex-grow grid gap-2 lg:gap-4 items-center'>
+          {(currentUser && !isMember) &&
+            <Button variant="contained" color="primary"
+              onClick={handleMembership} className='font-bold normal-case rounded-full text-xs lg:text-base h-min'
+            >Join</Button>
+          }
+          {(currentUser && isMember) &&
+            <Button variant={buttonVariant ? "contained" : "outlined"} color="primary"
+              onClick={handleMembership} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}
+              className='font-bold normal-case rounded-full text-xs lg:text-base'
+            >
+              {buttonVariant ? "Leave" : "Joined"}
+            </Button>
+          }
+          {currentUser && isMember &&
+            <Button variant="contained" color="primary" LinkComponent={Link} href={`/r/${community.name}/submit`}
+              className='font-bold normal-case rounded-full text-xs lg:text-base'
+            >
+              Create post
+            </Button>
+          }
         </div>
-        {(currentUser && !isMember) &&
-          <Button variant="contained" color="primary"
-            onClick={handleMembership} className='font-bold normal-case rounded-full'
-          >Join</Button>
-        }
-        {(currentUser && isMember) &&
-          <Button variant={buttonVariant ? "contained" : "outlined"} color="primary"
-            onClick={handleMembership} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}
-            className='font-bold normal-case rounded-full'
-          >
-            {buttonVariant ? "Leave" : "Joined"}
-          </Button>
-        }
-        {currentUser && isMember &&
-          <Button variant="contained" color="primary" LinkComponent={Link} href={`/r/${community.name}/submit`}
-            className='font-bold normal-case rounded-full'
-          >
-            Create post
-          </Button>
-        }
       </div>
     </div>
   );

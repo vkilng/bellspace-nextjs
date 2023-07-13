@@ -13,7 +13,7 @@ export default function CreatePost() {
   if (currentUser && router.query.username !== currentUser?.username)
     router.push("/");
 
-  const setBannerContent = useBannerStore(state=>state.setBannerContent);
+  const setBannerContent = useBannerStore((state) => state.setBannerContent);
   useEffect(() => {
     setBannerContent({ icon: "plus", text: "Create Post" });
   }, []);
@@ -49,8 +49,11 @@ export default function CreatePost() {
 
   if (currentUser)
     return (
-      <div className="grid grid-rows-1 overflow-y-hidden h-full">
-        <div className="overflow-y-auto p-10 grid lg:grid-cols-[2fr_1fr] gap-10">
+      <div className="grid grid-rows-1 lg:overflow-y-hidden lg:h-full">
+        <div className="overflow-y-auto p-3 md:p-5 lg:p-10 grid lg:grid-cols-[2fr_1fr] gap-3 lg:gap-10">
+          <div className="lg:hidden">
+            <UserInfoPanel requestedUser={currentUser} />
+          </div>
           {currentUser && currentUser.username === router.query.username && (
             <form
               className="overflow-y-auto px-1 grid gap-5 auto-rows-min"
@@ -84,7 +87,9 @@ export default function CreatePost() {
               </Button>
             </form>
           )}
-          <UserInfoPanel requestedUser={currentUser} />
+          <div className="hidden lg:block">
+            <UserInfoPanel requestedUser={currentUser} />
+          </div>
         </div>
       </div>
     );

@@ -34,14 +34,16 @@ export default function PageBanner() {
 
   return (
     <div className='flex gap-3 items-center justify-center py-1 px-4 font-sans text-sm dark:text-white'>
-      {sidebarHidden &&
-        <IconButton aria-label="toggle-sidebar" onClick={toggleSidebar}>
-          <MenuOpenIcon />
-        </IconButton>
-      }
-      <div className='flex gap-3 items-center justify-center'>
+      <div className='hidden lg:block'>
+        {sidebarHidden &&
+          <IconButton aria-label="toggle-sidebar" onClick={toggleSidebar}>
+            <MenuOpenIcon />
+          </IconButton>
+        }
+      </div>
+      <div className='flex gap-3 items-center'>
         {getIcon()}
-        {bannerContent?.text}
+        <div className='max-w-[8rem] overflow-hidden whitespace-nowrap text-ellipsis md:max-w-full'>{bannerContent?.text}</div>
       </div>
     </div>
   )

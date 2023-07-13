@@ -125,7 +125,7 @@ export default function PostDetailedCard({ post }) {
 
   if (postContent) return (
     <div className="flex py-4 gap-4 dark:bg-zinc-950 dark:text-white">
-      <div className="grid items-center justify-items-center h-min">
+      <div className="hidden lg:grid items-center justify-items-center h-min">
         <IconButton className="vote-btn" onClick={currentUser && handleUpvote}>
           <ArrowFatUp size={28}
             weight={(currentVote === null) ? 'regular' : 'fill'}
@@ -142,10 +142,10 @@ export default function PostDetailedCard({ post }) {
       </div>
       <div className="grid auto-rows-min gap-3 content-between flex-grow">
         <div className="grid gap-3 auto-rows-min">
-          <div className="flex gap-1 text-sm items-center flex-wrap">
+          <div className="flex gap-1 text-xs lg:text-sm items-center flex-wrap">
             {post.community &&
               <Link href={`/r/${post.community.name}`} onClick={(e) => e.stopPropagation()}
-                className="text-black text-base font-bold me-2 no-underline hover:underline dark:text-white">
+                className="text-black text-xs lg:text-base font-bold me-2 no-underline hover:underline dark:text-white">
                 r/{post.community.name}
               </Link>
             }
@@ -159,30 +159,46 @@ export default function PostDetailedCard({ post }) {
           <div className="font-bold text-xl">{post.title}</div>
           {!postContent.isEmpty && <EditorContent editor={postContent} />}
           {post.images && post.images.length > 0 &&
-            <Carousel autoPlay={false} fullHeightHover={false} className="w-full">
+            <Carousel autoPlay={false} indicators={post.images.length > 1} fullHeightHover={false}
+              navButtonsAlwaysInvisible={post.images.length < 2}>
               {post.images.map(imageObj =>
                 <div key={imageObj._id} className="flex items-center justify-center bg-stone-900 min-w-fit max-w-full">
-                  <Image image={imageObj} classes={'h-80'} alt={"an error occurred showing image"} />
+                  <Image image={imageObj} classes={'h-40 lg:h-80'} alt={"an error occurred showing image"} />
                 </div>
               )}
             </Carousel>
           }
         </div>
         <div className="flex gap-6 items-center">
-          <div className="flex gap-1 items-center">
-            <ChatCenteredText size={24} />
-            <div>{post.commentCount}</div>
-            Comments
+          <div className="flex lg:hidden items-center justify-items-center h-min">
+            <IconButton className="vote-btn" onClick={currentUser && handleUpvote}>
+              <ArrowFatUp size={20}
+                weight={(currentVote === null) ? 'regular' : 'fill'}
+                color={(currentVote === true) ? '#f59e0b' : '#a8a29e'}
+              />
+            </IconButton>
+            <div className="text-xs">{formatNumber(upvoteCount)}</div>
+            <IconButton className="vote-btn rotate-180" onClick={currentUser && handleDownVote}>
+              <ArrowFatUp size={20}
+                weight={(currentVote === null) ? 'regular' : 'fill'}
+                color={(currentVote === false) ? '#3b82f6' : '#a8a29e'}
+              />
+            </IconButton>
           </div>
-          <Button startIcon={<ShareNetwork size={24} />} className="normal-case dark:text-zinc-400" color="info">
-            Share
-          </Button>
-          <Button variant="text" className="normal-case dark:text-zinc-400" color="info" onClick={handleSave}
-            startIcon={<BookmarkSimple size={24} weight={saved ? 'fill' : 'regular'} color='#44403c' />}
-            disabled={!currentUser}
-          >
-            {saved ? 'Saved' : 'Save'}
-          </Button>
+          <div className="flex gap-2 items-center text-xs lg:text-base">
+            <ChatCenteredText size={24} className='hidden lg:block' />
+            <ChatCenteredText size={16} className='block lg:hidden' />
+            <div>{post.commentCount}</div>
+            {post.commentCount === 1 ? 'Comment' : 'Comments'}
+          </div>
+          {currentUser &&
+            <Button variant="text" className="normal-case dark:text-white text-xs lg:text-base" color="info" onClick={handleSave}
+              startIcon={<BookmarkSimple size={window?.screen.width > 768 ? 24 : 16} weight={saved ? 'fill' : 'regular'} classes='#000000 dark:#ffffff' />}
+              disabled={!currentUser}
+            >
+              {saved ? 'Saved' : 'Save'}
+            </Button>
+          }
         </div>
       </div>
     </div>

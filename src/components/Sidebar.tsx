@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { CurrentUserContext } from "@/lib/context";
-import useSWRImmutable from "swr/immutable";
+import useSWR from "swr";
 import fetcher from "@/lib/helperFunctions/fetcher";
 import CreateCommunityModal from "./CreateCommunityModal";
 
@@ -19,6 +19,9 @@ import { X } from "@phosphor-icons/react";
 import IconButton from "@mui/material/IconButton";
 import { CircularProgress } from "@mui/material";
 import { useBannerStore } from "@/lib/store";
+import LightDarkMenu from "./LightDarkMenu";
+import LoginModal from "./LoginModal";
+import AccountCircleMenu from "./AccountCircleMenu";
 
 export default function Sidebar() {
   const currentUser = useContext(CurrentUserContext);
@@ -31,20 +34,29 @@ export default function Sidebar() {
 
   // Collapse handlers
   const [open, setOpen] = useState(true);
-  const handleClick = () => {
-    setOpen(!open);
+  const handleClick = () => setOpen(!open);
+  const handleRouteChange = () => {
+    if (window.screen.width <= 768) toggleSidebar();
   };
+
+  // Log In Modal handlers
+  const [LogInOpen, setLogInOpen] = useState(false);
+  const handleLogInModalOpen = () => setLogInOpen(true);
+  const handleLogInModalClose = () => setLogInOpen(false);
 
   const {
     data: { communityList } = [],
     error,
     isLoading,
-  } = useSWRImmutable("/api/r/get-list", fetcher);
+  } = useSWR("/api/r/get-list", fetcher, {
+    revalidateOnFocus: false,
+    // revalidateOnMount: true,
+  });
 
   if (error) return <div>Error occurred</div>;
 
   return (
-    <div className="h-full grid grid-rows-[min-content_1fr]">
+    <div className="h-full grid grid-rows-[min-content_1fr] drop-shadow-lg bg-white dark:bg-black w-[100vw] md:w-full">
       <IconButton
         aria-label="close-sidebar"
         onClick={toggleSidebar}
@@ -53,83 +65,105 @@ export default function Sidebar() {
         <X size={16} />
       </IconButton>
       <div className="grid p-2 font-sans content-between overflow-y-auto">
-        <List component="nav" aria-label="main mailbox folders" className="p-0">
+        <div>
           {currentUser && (
-            <ListItemButton
-              onClick={handleModalOpen}
-              className="rounded-sm mb-1"
-            >
-              <ListItemIcon>
-                <AddOutlinedIcon />
-              </ListItemIcon>
+            <div className="lg:hidden">
+              <AccountCircleMenu />
+            </div>
+          )}
+
+          <div className="px-4 flex lg:hidden gap-2 items-center">
+            <div className="font-semibold">Theme:</div>
+            <LightDarkMenu />
+          </div>
+
+          <List
+            component="nav"
+            aria-label="main mailbox folders"
+            className="p-0"
+          >
+            {currentUser && (
+              <ListItemButton
+                onClick={handleModalOpen}
+                className="rounded-sm mb-1"
+              >
+                <ListItemIcon>
+                  <AddOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Create Community"
+                  disableTypography
+                  className="font-semibold"
+                />
+              </ListItemButton>
+            )}
+            {modalOpen && (
+              <CreateCommunityModal
+                handleClose={handleModalClose}
+                modalOpen={modalOpen}
+              />
+            )}
+            <ListItemButton onClick={handleClick} className="rounded-sm mb-1">
               <ListItemText
-                primary="Create Community"
+                primary="Communities"
                 disableTypography
                 className="font-semibold"
               />
+              {open ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
-          )}
-          {modalOpen && (
-            <CreateCommunityModal
-              handleClose={handleModalClose}
-              modalOpen={modalOpen}
-            />
-          )}
-          <ListItemButton onClick={handleClick} className="rounded-sm mb-1">
-            <ListItemText
-              primary="Communities"
-              disableTypography
-              className="font-semibold"
-            />
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          {isLoading ? (
-            <div className="p-4 flex justify-center">
-              <CircularProgress size={"1rem"} />
-            </div>
-          ) : (communityList && communityList.length) > 0 ? (
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding className="ms-5">
-                {communityList.map((communityObj: any, index: number) => (
-                  <ListItemButton
-                    className="mb-1"
-                    component={Link}
-                    href={`/r/${communityObj.name}`}
-                    key={communityObj._id}
-                  >
-                    <ListItemText
-                      disableTypography
-                      className="font-semibold"
-                    >{`r/${communityObj.name}`}</ListItemText>
-                  </ListItemButton>
-                ))}
-              </List>
-            </Collapse>
-          ) : (
-            <div className="p-4 text-sm text-center">
-              No Communities have been created
-            </div>
-          )}
-        </List>
-        <div className="p-2 self-end">
+            {isLoading ? (
+              <div className="p-4 flex justify-center">
+                <CircularProgress size={"1rem"} />
+              </div>
+            ) : (communityList && communityList.length) > 0 ? (
+              <Collapse in={open} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding className="ms-5">
+                  {communityList.map((communityObj: any, index: number) => (
+                    <ListItemButton
+                      className="mb-1"
+                      component={Link}
+                      href={`/r/${communityObj.name}`}
+                      onClick={handleRouteChange}
+                      key={communityObj._id}
+                    >
+                      <ListItemText
+                        disableTypography
+                        className="font-semibold"
+                      >{`r/${communityObj.name}`}</ListItemText>
+                    </ListItemButton>
+                  ))}
+                </List>
+              </Collapse>
+            ) : (
+              <div className="p-4 text-sm text-center">
+                No Communities have been created
+              </div>
+            )}
+          </List>
+        </div>
+
+        <div className="self-end">
           {currentUser ? (
-            <ListItemButton
-              component={Link}
-              href={`/user/${currentUser.username}/submit`}
-              className="rounded-sm"
-            >
-              <ListItemIcon>
-                <AddOutlinedIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="Create Post"
-                disableTypography
-                className="font-semibold"
-              />
-            </ListItemButton>
+            <>
+              <ListItemButton
+                component={Link}
+                href={`/user/${currentUser.username}/submit`}
+                onClick={handleRouteChange}
+                className="rounded-sm"
+              >
+                <ListItemIcon>
+                  <AddOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Create Post"
+                  disableTypography
+                  className="font-semibold"
+                />
+              </ListItemButton>
+            </>
           ) : (
-            <div className="grid justify-center">
-              <div className="mb-4">
+            <div className="grid justify-center gap-4">
+              <div>
                 Create an account to follow your favorite communities and start
                 taking part in conversations.
               </div>
@@ -137,9 +171,16 @@ export default function Sidebar() {
                 href="/register"
                 variant="contained"
                 color="primary"
-                className="mb-4 rounded-full normal-case font-bold"
+                className="lg:mb-4 rounded-full normal-case font-bold"
               >
                 Join Bellspace
+              </Button>
+              <Button
+                variant="contained"
+                className="rounded-full normal-case font-bold lg:hidden"
+                onClick={handleLogInModalOpen}
+              >
+                Log In
               </Button>
             </div>
           )}
@@ -151,6 +192,9 @@ export default function Sidebar() {
           </div>
         </div>
       </div>
+      {LogInOpen && (
+        <LoginModal LogInOpen={LogInOpen} handleClose={handleLogInModalClose} />
+      )}
     </div>
   );
 }

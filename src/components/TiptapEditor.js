@@ -137,94 +137,96 @@ export default function TiptapEditor({ options: {
       .run()
   }, [editor])
 
+  const buttonSize = window.screen.width > 768 ? 16 : 10;
+
   if (editor) return (
     <div className="border-2 border-solid border-stone-300 rounded-md w-full focus-within:border-1 focus-within:border-stone-400 bg-white dark:bg-zinc-950 dark:text-white dark:border-zinc-800">
-      <div className="p-2 flex gap-5 bg-stone-100 rounded-t-sm dark:bg-zinc-800 dark:text-white">
+      <div className="p-2 flex gap-x-5 gap-y-2 flex-wrap bg-stone-100 rounded-t-sm dark:bg-zinc-800 dark:text-white">
         <div className="flex gap-1">
           <MenuButton size="small" selected={editor.isActive('bold')}
             onClick={() => editor.chain().focus().toggleBold().run()} value="check"
           >
-            <TextB size={16} />
+            <TextB size={buttonSize} />
           </MenuButton>
           <MenuButton size="small" selected={editor.isActive('italic')}
             onClick={() => editor.chain().focus().toggleItalic().run()} value="check"
           >
-            <TextItalic size={16} />
+            <TextItalic size={buttonSize} />
           </MenuButton>
           <MenuButton size="small" selected={editor.isActive('strike')}
             onClick={() => editor.chain().focus().toggleStrike().run()} value="check"
           >
-            <TextStrikethrough size={16} />
+            <TextStrikethrough size={buttonSize} />
           </MenuButton>
         </div>
         <div className="flex gap-1">
           <MenuButton size="small" selected={editor.isActive('superscript')}
             onClick={() => editor.chain().focus().toggleSuperscript().run()} value="check"
           >
-            <SuperscriptOutlinedIcon sx={{ fontSize: 16 }} />
+            <SuperscriptOutlinedIcon sx={{ fontSize: buttonSize }} />
           </MenuButton>
           <MenuButton size="small" selected={editor.isActive('link')}
             onClick={toggleLink} value="check"
           >
-            <LinkIcon size={16} />
+            <LinkIcon size={buttonSize} />
           </MenuButton>
         </div>
         <div className="flex gap-1">
           <MenuButton size="small" selected={editor.isActive('code')}
             onClick={() => editor.chain().focus().toggleCode().run()} value="check"
           >
-            <Code size={16} />
+            <Code size={buttonSize} />
           </MenuButton>
           <MenuButton size="small" selected={editor.isActive('codeBlock')}
             onClick={() => editor.chain().focus().toggleCodeBlock().run()} value="check"
           >
-            <CodeBlock size={16} />
+            <CodeBlock size={buttonSize} />
           </MenuButton>
           <MenuButton size="small" selected={editor.isActive('blockquote')}
             onClick={() => editor.chain().focus().toggleBlockquote().run()} value="check"
           >
-            <Quotes size={16} />
+            <Quotes size={buttonSize} />
           </MenuButton>
         </div>
         <div className="flex gap-1">
           <MenuButton size="small" selected={editor.isActive('bulletList')}
             onClick={() => editor.chain().focus().toggleBulletList().run()} value="check"
           >
-            <ListBullets size={16} />
+            <ListBullets size={buttonSize} />
           </MenuButton>
           <MenuButton size="small" selected={editor.isActive('orderedList')}
             onClick={() => editor.chain().focus().toggleOrderedList().run()} value="check"
           >
-            <ListNumbers size={16} />
+            <ListNumbers size={buttonSize} />
           </MenuButton>
         </div>
         <div className="flex gap-1">
           <MenuButton size="small" selected={editor.isActive('heading', { level: 1 })}
             onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} value="check"
           >
-            <TextHOne size={16} />
+            <TextHOne size={buttonSize} />
           </MenuButton>
           <MenuButton size="small" selected={editor.isActive('heading', { level: 2 })}
             onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} value="check"
           >
-            <TextHTwo size={16} />
+            <TextHTwo size={buttonSize} />
           </MenuButton>
           <MenuButton size="small" selected={editor.isActive('heading', { level: 3 })}
             onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} value="check"
           >
-            <TextHThree size={16} />
+            <TextHThree size={buttonSize} />
           </MenuButton>
         </div>
         <div className="flex gap-1">
           {type === 'post' && <MenuButton size="small" value="check"
             onClick={() => document.querySelector('#file-input-label').click()}
           >
-            <ImageIcon size={16} />
+            <ImageIcon size={buttonSize} />
           </MenuButton>}
           <MenuButton size="small" value="check"
             onClick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
           >
-            <Broom size={16} />
+            <Broom size={buttonSize} />
           </MenuButton>
         </div>
       </div>
@@ -244,7 +246,7 @@ export default function TiptapEditor({ options: {
                   return (
                     <div key={uuidv4()} className="flex items-center justify-center bg-stone-900">
                       <IconButton onClick={() => deleteFile(index)} color="error" className="absolute left-0 top-0">
-                        <Trash size={16} weight="fill" />
+                        <Trash size={buttonSize} weight="fill" />
                       </IconButton>
                       <img src={url ?? '#'} alt='error uploading image' height={160} />
                     </div>

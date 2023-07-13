@@ -45,14 +45,14 @@ export default function Layout({ children }: PropsWithChildren) {
           <meta name="viewport" content="initial-scale=1, width=device-width" />
           <link
             rel="shortcut icon"
-            href="/images/turbine-icon.png"
+            href="/images/turbine-icon.webp"
             type="image/x-icon"
           />
           <title>Bellspace</title>
         </Head>
         <div
           className={`h-full font-sans grid grid-rows-[min-content_1fr] grid-cols-1 ${
-            sidebarHidden ? "" : "md:grid-cols-[1fr_3.5fr]"
+            sidebarHidden ? "" : "lg:grid-cols-[1fr_3fr]"
           }`}
           key="nochange"
         >
@@ -60,8 +60,8 @@ export default function Layout({ children }: PropsWithChildren) {
             <Header />
           </div>
           <div
-            className={`overflow-y-hidden hidden ${
-              sidebarHidden ? "" : "md:block"
+            className={`overflow-y-hidden ${
+              sidebarHidden ? "hidden" : "z-20 block absolute right-0 lg:static"
             } dark:bg-black dark:text-white`}
           >
             <Sidebar />

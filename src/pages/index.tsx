@@ -57,10 +57,10 @@ export default function Home() {
 
   return (
     <div
-      className="scroll-up-container h-full grid grid-rows-[1fr] grid-cols-[2.3fr_0.7fr] overflow-y-auto gap-5"
+      className="scroll-up-container h-full grid grid-rows-[1fr] grid-cols-1 overflow-y-auto gap-5"
       ref={containerRef}
     >
-      <div className="grid auto-rows-min gap-4 py-10 pl-10">
+      <div className="grid auto-rows-min gap-4 p-3 md:p-5 lg:p-10">
         {posts.length
           ? posts.map((post: postObj) => (
               <PostOverviewCard
@@ -76,7 +76,6 @@ export default function Home() {
             ))
           : "No posts yet"}
       </div>
-      <div className="h-min py-10 pr-10 text-center">Annoucements</div>
     </div>
   );
 }

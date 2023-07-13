@@ -71,8 +71,11 @@ export default function CreatePost() {
 
   if (currentUser)
     return (
-      <div className="grid grid-rows-1 overflow-y-hidden h-full">
-        <div className="overflow-y-auto p-10 grid lg:grid-cols-[2fr_1fr] gap-10">
+      <div className="grid grid-rows-1 lg:overflow-y-hidden lg:h-full">
+        <div className="overflow-y-auto p-3 md:p-5 lg:p-10 grid lg:grid-cols-[2fr_1fr] gap-3 lg:gap-10">
+          <div className="lg:hidden">
+            <CommunityInfoPanel community={community} key={community._id} />
+          </div>
           {currentUser?.communities &&
           currentUser.communities.includes(community._id) ? (
             <form
@@ -109,7 +112,9 @@ export default function CreatePost() {
           ) : (
             <div className="text-center">{`You're not a member of this community`}</div>
           )}
-          <CommunityInfoPanel community={community} key={community._id} />
+          <div className="hidden lg:block">
+            <CommunityInfoPanel community={community} key={community._id} />
+          </div>
         </div>
       </div>
     );

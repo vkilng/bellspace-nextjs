@@ -9,23 +9,29 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import User from '@phosphor-icons/react/User';
 import CaretDown from '@phosphor-icons/react/CaretDown';
 import UserCircle from '@phosphor-icons/react/UserCircle';
-import Gear from '@phosphor-icons/react/Gear';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import SignOut from '@phosphor-icons/react/SignOut';
+import { useBannerStore } from '@/lib/store';
 
 
 export default function AccountCircleMenu() {
   const currentUser = useContext(CurrentUserContext);
+  const toggleSidebar = useBannerStore(state => state.toggleSidebar);
 
   // AccountCircleMenu menu handlers
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
+  const handleSidebarClose = () => {
+    if (window.screen.width <= 768) toggleSidebar();
+    return setAnchorEl(null);
+  }
 
   return (
-    <>
+    <div>
       <Button
-        color="secondary"
+        // color="info"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
@@ -42,21 +48,21 @@ export default function AccountCircleMenu() {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         className="rounded-lg mt-2"
       >
-        <MenuItem className="px-3 mx-2 mb-1" onClick={handleClose} component={Link} href={`/user/${currentUser.username}`}>
+        <MenuItem className="px-3 mx-2 mb-1" onClick={handleSidebarClose} component={Link} href={`/user/${currentUser.username}`}>
           <ListItemIcon><UserCircle size={24} /></ListItemIcon>
           <ListItemText>Profile</ListItemText>
         </MenuItem>
 
-        <MenuItem className="px-3 mx-2 mb-1" onClick={handleClose}>
-          <ListItemIcon><Gear size={24} /></ListItemIcon>
+        <MenuItem className="px-3 mx-2 mb-1" onClick={handleSidebarClose} disabled>
+          <ListItemIcon><SettingsOutlinedIcon /></ListItemIcon>
           <ListItemText>Settings</ListItemText>
         </MenuItem>
 
-        <MenuItem className="px-3 mx-2" onClick={handleClose} component={Link} href='/api/logout'>
+        <MenuItem className="px-3 mx-2" onClick={handleSidebarClose} component={Link} href='/api/logout'>
           <ListItemIcon><SignOut size={24} /></ListItemIcon>
           <ListItemText>Log Out</ListItemText>
         </MenuItem>
       </Menu>
-    </>
+    </div>
   )
 }

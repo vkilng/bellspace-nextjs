@@ -58,7 +58,7 @@ export default function CommentForm({ mutate }: any) {
       {currentUser && (
         <div>
           <form onSubmit={handleSubmit} className="grid gap-1">
-            <div className="px-2">
+            <div className="px-2 dark:text-white">
               comment as {currentUser.username} <CaretDown size={12} />
             </div>
             <input

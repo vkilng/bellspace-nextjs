@@ -9,12 +9,10 @@ import IconButton from '@mui/material/IconButton'
 import ArrowFatUp from '@phosphor-icons/react/ArrowFatUp';
 import ChatCenteredText from "@phosphor-icons/react/ChatCenteredText";
 import BookmarkSimple from "@phosphor-icons/react/BookmarkSimple";
-import ShareNetwork from '@phosphor-icons/react/ShareNetwork';
 import ClockCounterClockwise from '@phosphor-icons/react/ClockCounterClockwise';
 import { CurrentUserContext } from "@/lib/context";
 import { useRouter } from "next/router";
 import Carousel from "react-material-ui-carousel";
-import { v4 as uuidv4 } from "uuid";
 import Image from "./Image";
 
 const PostOverviewCard = ({ post, propRef }) => {
@@ -127,7 +125,7 @@ const PostOverviewCard = ({ post, propRef }) => {
       className="max-w-2xl cursor-pointer shadow-sm hover:outline hover:outline-1 hover:outline-stone-500 border-none"
     >
       <div className="flex p-4 gap-4 max-w-2xl">
-        <div className="grid items-center justify-items-center h-min">
+        <div className="hidden lg:grid items-center justify-items-center h-min">
           <IconButton className="vote-btn"
             onClick={currentUser ? handleUpvote : (e) => e.stopPropagation()}
           >
@@ -148,12 +146,15 @@ const PostOverviewCard = ({ post, propRef }) => {
         </div>
         <div className="grid auto-rows-min gap-3 content-between flex-grow">
           <div className="grid gap-3 auto-rows-min">
-            <div className="flex gap-1 text-sm items-center flex-wrap">
+            <div className="flex gap-1 text-xs lg:text-sm items-center flex-wrap">
               {post.community &&
-                <Link href={`/r/${post.community.name}`} onClick={(e) => e.stopPropagation()}
-                  className="text-black text-base font-bold me-2 no-underline hover:underline dark:text-white">
-                  r/{post.community.name}
-                </Link>
+                <div className="flex gap-2 items-center">
+                  {/* <Image image={post.community.profilepic} alt="img" classes="w-4 h-4 rounded-full" /> */}
+                  <Link href={`/r/${post.community.name}`} onClick={(e) => e.stopPropagation()}
+                    className="text-black text-xs lg:text-base font-bold me-2 no-underline hover:underline dark:text-white">
+                    r/{post.community.name}
+                  </Link>
+                </div>
               }
               Posted by
               <Link href={`/user/${post.author.username}`} onClick={(e) => e.stopPropagation()}
@@ -168,27 +169,45 @@ const PostOverviewCard = ({ post, propRef }) => {
               {post.title}
             </div>
             {post.images && post.images.length > 0 &&
-              <Carousel autoPlay={false} indicators={false} fullHeightHover={false} className="w-full">
+              <Carousel autoPlay={false} indicators={post.images.length > 1} fullHeightHover={false}
+                navButtonsAlwaysInvisible={post.images.length < 2} className="w-full">
                 {post.images.map(imageObj =>
                   <div key={imageObj._id} className="flex items-center justify-center bg-stone-900 min-w-fit max-w-full">
-                    <Image image={imageObj} classes={'h-80'} alt={"an error occurred showing image"} />
+                    <Image image={imageObj} classes={'h-40 lg:h-80'} alt={"an error occurred showing image"} />
                   </div>
                 )}
               </Carousel>
             }
           </div>
-          <div className="flex gap-6 items-center">
-            <div className="flex gap-1 items-center">
-              <ChatCenteredText size={24} />
-              <div>{post.commentCount}</div>
-              Comments
+          <div className="flex gap-6 items-center text-xs lg:text-base">
+            <div className="flex lg:hidden gap-1 items-center justify-items-center h-min">
+              <IconButton className="vote-btn p-1"
+                onClick={currentUser ? handleUpvote : (e) => e.stopPropagation()}
+              >
+                <ArrowFatUp size={16}
+                  weight={(currentVote === null) ? 'regular' : 'fill'}
+                  color={(currentVote === true) ? '#f59e0b' : '#a8a29e'}
+                />
+              </IconButton>
+              <div className="text-xs">{formatNumber(upvoteCount)}</div>
+              <IconButton className="vote-btn p-1 rotate-180"
+                onClick={currentUser ? handleDownVote : (e) => e.stopPropagation()}
+              >
+                <ArrowFatUp size={16}
+                  weight={(currentVote === null) ? 'regular' : 'fill'}
+                  color={(currentVote === false) ? '#3b82f6' : '#a8a29e'}
+                />
+              </IconButton>
             </div>
-            <Button startIcon={<ShareNetwork size={24} />} onClick={(e) => e.stopPropagation()} className="normal-case dark:text-zinc-400" color="info">
-              Share
-            </Button>
+            <div className="flex gap-2 items-center">
+              <ChatCenteredText size={24} className='hidden lg:block' />
+              <ChatCenteredText size={16} className='block lg:hidden' />
+              <div>{post.commentCount}</div>
+              {post.commentCount === 1 ? 'Comment' : 'Comments'}
+            </div>
             {currentUser &&
-              <Button variant="text" className="normal-case dark:text-zinc-400" color="info" onClick={handleSave}
-                startIcon={<BookmarkSimple size={24} weight={saved ? 'fill' : 'regular'} color='#44403c' />}
+              <Button variant="text" className="normal-case dark:text-white text-xs lg:text-base" color="info" onClick={handleSave}
+                startIcon={<BookmarkSimple size={window?.screen.width > 768 ? 24 : 16} weight={saved ? 'fill' : 'regular'} classes='#000000 dark:#ffffff' />}
                 disabled={!currentUser}
               >
                 {saved ? 'Saved' : 'Save'}

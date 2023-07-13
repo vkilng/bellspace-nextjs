@@ -45,7 +45,7 @@ export default function UserPost() {
 
   return (
     <div className="grid grid-rows-[min-content_1fr] overflow-y-hidden h-full bg-slate-100 dark:bg-zinc-950">
-      <div className="flex ms-10">
+      <div className="flex lg:ms-5 xl:ms-10">
         <IconButton
           aria-label=""
           LinkComponent={Link}
@@ -55,16 +55,21 @@ export default function UserPost() {
           <ArrowLeft size={24} />
         </IconButton>
       </div>
-      <div className="scroll-up-container overflow-y-auto p-10 pt-0 grid auto-rows-1 lg:grid-cols-[1.5fr_1fr] xl:grid-cols-[2fr_1fr] gap-5">
+      <div className="scroll-up-container overflow-y-auto p-3 pt-0 lg:p-5 lg:pt-0 xl:p-10 xl:pt-0 grid auto-rows-1 lg:grid-cols-[1.5fr_1fr] xl:grid-cols-[2fr_1fr] gap-5">
         <div>
           <PostDetailedCard post={post} />
           <Divider className="my-2 -mx-2" />
           <CommentForm mutate={mutate} />
-          <div className="p-2 bg-white rounded-sm dark:bg-[#121212] dark:text-white" id="comments-block">
+          <div
+            className="p-2 bg-white rounded-sm dark:bg-[#121212] dark:text-white"
+            id="comments-block"
+          >
             <CommentsBlock commentsTree={commentTree(comments)} />
           </div>
         </div>
-        <UserInfoPanel requestedUser={requestedUser} />
+        <div className="hidden lg:block">
+          <UserInfoPanel requestedUser={requestedUser} />
+        </div>
       </div>
     </div>
   );

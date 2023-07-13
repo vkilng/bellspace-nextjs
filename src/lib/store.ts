@@ -20,7 +20,7 @@ export const useThemeStore = create<ThemeState>()((set) => ({
 type BannerContent = {
   icon: string;
   text: string;
-  image?: any
+  image?: any;
 };
 
 type BannerState = {
@@ -34,7 +34,7 @@ export const useBannerStore = create<BannerState>()((set) => ({
   bannerContent: { icon: "home", text: "Home" },
   setBannerContent: (content: BannerContent) =>
     set(() => ({ bannerContent: content })),
-  sidebarHidden: false,
+  sidebarHidden: true,
   toggleSidebar: () =>
     set((state) => ({ sidebarHidden: !state.sidebarHidden })),
 }));
