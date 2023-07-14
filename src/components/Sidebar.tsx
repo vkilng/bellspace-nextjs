@@ -53,8 +53,6 @@ export default function Sidebar() {
     // revalidateOnMount: true,
   });
 
-  if (error) return <div>Error occurred</div>;
-
   return (
     <div className="h-full grid grid-rows-[min-content_1fr] drop-shadow-lg bg-white dark:bg-black w-[100vw] md:w-full">
       <IconButton
@@ -111,7 +109,11 @@ export default function Sidebar() {
               />
               {open ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
-            {isLoading ? (
+            {error ? (
+              <div className="p-4 text-sm text-center">
+                Error, try again later...
+              </div>
+            ) : isLoading ? (
               <div className="p-4 flex justify-center">
                 <CircularProgress size={"1rem"} />
               </div>
